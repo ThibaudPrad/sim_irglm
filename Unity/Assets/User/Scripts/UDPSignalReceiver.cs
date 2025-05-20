@@ -4,6 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Collections;
 using TMPro;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class UDPSignalReceiver : MonoBehaviour
 {
@@ -99,8 +102,12 @@ public class UDPSignalReceiver : MonoBehaviour
 
              if (emergencyStop==1)
              {
-             //Application.Quit();
-             UnityEditor.EditorApplication.isPlaying = false;
+            //Application.Quit();
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+                #else
+                Application.Quit();
+                #endif
              }
 
     }
