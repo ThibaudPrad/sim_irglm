@@ -8,4 +8,61 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 4804074ee5920244a8456b59aad35157
+  - enabled: 1
+    path: Assets/Scenes/Mall.unity
+    guid: 2cd9ef6a35ff40d43b19dd6b702dc0ab
+  - enabled: 1
+    path: Assets/Scenes/WSP.unity
+    guid: ede8d1fe43dda463bb8717d8a131325b
+  - enabled: 1
+    path: Assets/Scenes/IRGLM_Lindsay_ramp.unity
+    guid: f1372abe743e148d48fd5e73f42528e7
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_4thFloor.unity
+    guid: 08b0e134736768b438dfb359a04752b1
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_4thFloor_Second_Trial.unity
+    guid: 6ee2425aabec5dd47a23ed17eec0897e
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_4thFloor_Test.unity
+    guid: 432ae417879289144948cb79ef306acb
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Bioffedback_Metronom.unity
+    guid: abe983b4d7a4d9e40b5109b16c615f50
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_L_path.unity
+    guid: cdd6ee1f88e24cd4aa7c3ff39e6888d1
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_L_path_2nd_effort.unity
+    guid: d09535762c66e734997dcd3786604295
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_L_path_3d_effort.unity
+    guid: b74b0cdb145ef8a44894affafb4f335c
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_medium_Ramp.unity
+    guid: fcc84b684328ea141958232d0ae2aeda
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_small_Ramp.unity
+    guid: 6780a53606271224982f1cc82650c450
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Familiar_Straight.unity
+    guid: 7cc79deab016ed64c8723364f58fc822
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Mall.unity
+    guid: d3a2fb522f54f7e439ae52a152dd865c
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Ramp.unity
+    guid: 8182b9482dc45ac43a245ef515dc6266
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Ramp2.unity
+    guid: 95620823ed509864c9e244cb49013a71
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Ramp3.unity
+    guid: 119afdc50f76de94d82e087756847307
+  - enabled: 1
+    path: Assets/Scenes/IRGLM/IRGLM_Ramp4.unity
+    guid: 4c8ee89428c1a754e8cd037e86608478
   m_configObjects: {}

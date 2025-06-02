@@ -1,95 +1,97 @@
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using UnityEngine;
 
 public class UDPSignalSender : MonoBehaviour
-
 {
-    private string ipAddress = "192.168.0.200"; // IP address of the receiver
-    private int port = 25000; // Port to send the data
+    private string ipAddress = "192.168.0.200";
+    private int port = 25000;
+    private UdpClient udpClient;
 
-     public CollisionDetect collisiondetect;
-     public double hardwareEnable = 0;
-
-     public double wholeMass=94.4;
+    public CollisionDetect collisiondetect;
+    public double hardwareEnable = 0;
+    public double wholeMass = 94.4;
     public double wheelDistance = 0.60;
     public bool forceReset = false;
 
-    private UdpClient udpClient;
-
-      double previousFriction;
+    double previousFriction;
     bool previousCollisionFound;
-    double previousWholeMass;
     double previousHardwareEnable;
+    double previousWholeMass;
     double previousWheelDistance;
     bool previousForceReset;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
-        udpClient = new UdpClient(25000);
-        hardwareEnable = 1;
-        forceReset = true;
-        SendData();
-        Debug.Log("Start sending data ");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        SendData();
-    }
-    void SendData()
-    {
-        // Serialize Data
-        byte[] data = new byte[40]; // One Float (8*4Bytes) and two Boolean Data (8Bytes)
-        System.BitConverter.GetBytes(hardwareEnable).CopyTo(data, 0);
-        System.BitConverter.GetBytes(collisiondetect.friction).CopyTo(data, 8);
-        System.BitConverter.GetBytes(collisiondetect.collisionfound).CopyTo(data, 16);
-        System.BitConverter.GetBytes(wholeMass).CopyTo(data, 20);
-        System.BitConverter.GetBytes(wheelDistance).CopyTo(data, 28);
-        System.BitConverter.GetBytes(forceReset).CopyTo(data, 36);
-        Debug.Log("Data ready ");
-        
- if (previousFriction != collisiondetect.friction ||
-            previousCollisionFound != collisiondetect.collisionfound ||
-            previousWholeMass != wholeMass ||
-            previousHardwareEnable != hardwareEnable ||
-            previousWheelDistance != wheelDistance ||
-            previousForceReset != forceReset)
+        try
         {
-       // Send data
-        udpClient.Send(data, data.Length, ipAddress, port);
-        Debug.Log("Sent friction data: " + collisiondetect.friction);
-         
-         Debug.Log("Sent collision data: " + collisiondetect.collisionfound);
-        Debug.Log("Sent Hardware Enable: " + hardwareEnable);
-
-         // Update previous data
-            previousFriction = collisiondetect.friction;
-            previousCollisionFound = collisiondetect.collisionfound;
-            previousWholeMass = wholeMass;
-            previousHardwareEnable = hardwareEnable;
-            previousWheelDistance = wheelDistance;
-            previousForceReset = forceReset;
-
-
+            udpClient = new UdpClient();
+            hardwareEnable = 1;
+            forceReset = true;
+            Debug.Log("📡 UDPSignalSender initialisé.");
+        }
+        catch (SocketException e)
+        {
+            Debug.LogError("❌ Erreur d'ouverture du port UDP : " + e.Message);
         }
     }
 
-   
+    void Update()
+    {
+        if (collisiondetect == null) return;
+        SendData();
+    }
+
+    void SendData()
+    {
+        if (udpClient == null || collisiondetect == null)
+        {
+            return;
+        }
+
+        double friction = collisiondetect.friction;
+        bool collisionFound = collisiondetect.collisionfound;
+
+        byte[] data = new byte[40];
+        System.BitConverter.GetBytes(hardwareEnable).CopyTo(data, 0);
+        System.BitConverter.GetBytes(friction).CopyTo(data, 8);
+        System.BitConverter.GetBytes(collisionFound).CopyTo(data, 16);
+        System.BitConverter.GetBytes(wholeMass).CopyTo(data, 20);
+        System.BitConverter.GetBytes(wheelDistance).CopyTo(data, 28);
+        System.BitConverter.GetBytes(forceReset).CopyTo(data, 36);
+
+        if (previousFriction != friction || previousCollisionFound != collisionFound ||
+            previousHardwareEnable != hardwareEnable || previousWholeMass != wholeMass ||
+            previousWheelDistance != wheelDistance || previousForceReset != forceReset)
+        {
+            udpClient.Send(data, data.Length, ipAddress, port);
+            previousFriction = friction;
+            previousCollisionFound = collisionFound;
+            previousHardwareEnable = hardwareEnable;
+            previousWholeMass = wholeMass;
+            previousWheelDistance = wheelDistance;
+            previousForceReset = forceReset;
+        }
+    }
 
     void OnApplicationQuit()
     {
-      hardwareEnable = 0;
-      forceReset = false;
-       SendData();
+        if (udpClient == null) return;
+        hardwareEnable = 0;
+        forceReset = false;
+        SendData();
     }
 
-     void OnDestroy()
+    void OnDestroy()
     {
-                  udpClient.Close();
+        if (udpClient != null)
+        {
+            udpClient.Close();
+        }
     }
-
-   
 }
