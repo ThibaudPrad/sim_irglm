@@ -15,11 +15,6 @@ public class ClientRowHandler : MonoBehaviour
     void Start()
     {
         toggleClient.onValueChanged.AddListener(OnToggleChanged);
-
-        inputNom.onEndEdit.AddListener(delegate { UpdateAndSave(); });
-        inputDistanceRoue.onEndEdit.AddListener(delegate { UpdateAndSave(); });
-        inputDistanceBras.onEndEdit.AddListener(delegate { UpdateAndSave(); });
-        inputMasse.onEndEdit.AddListener(delegate { UpdateAndSave(); });
     }
 
     void OnToggleChanged(bool isOn)
@@ -28,23 +23,18 @@ public class ClientRowHandler : MonoBehaviour
 
         if (isOn)
         {
-            // Si on sélectionne un nouveau client : désélectionner l'ancien
+            // Deselect previous
             if (ClientSelectionHandler.Instance.CurrentSelected != null &&
                 ClientSelectionHandler.Instance.CurrentSelected != this)
             {
                 ClientSelectionHandler.Instance.CurrentSelected.Deselect();
             }
 
-            string nom = inputNom.text;
-            string roue = inputDistanceRoue.text;
-            string bras = inputDistanceBras.text;
-            string masse = inputMasse.text;
-
-            ClientSelectionHandler.Instance.SetSelectedClient(nom, roue, bras, masse, this);
+            PatientData data = GetCurrentData();
+            ClientSelectionHandler.Instance.SetSelectedClient(data, this);
         }
         else
         {
-            // Si on désélectionne ce client, on vérifie s’il était sélectionné
             if (ClientSelectionHandler.Instance.CurrentSelected == this)
             {
                 ClientSelectionHandler.Instance.ClearSelection();
@@ -52,30 +42,20 @@ public class ClientRowHandler : MonoBehaviour
         }
     }
 
-    public PatientData GetData()
-    {
-        PatientData data = new PatientData();
-
-        data.nom = inputNom.text;
-
-        float.TryParse(inputDistanceRoue.text, out data.distanceRoue);
-        float.TryParse(inputDistanceBras.text, out data.distanceBras);
-        float.TryParse(inputMasse.text, out data.masse);
-
-        return data;
-    }
-
-    void UpdateAndSave()
-{
-    ClientManager manager = FindObjectOfType<ClientManager>();
-    manager.UpdatePatientListAndSave();
-}
-
-
     public void Deselect()
     {
         ignoreToggleEvent = true;
         toggleClient.isOn = false;
         ignoreToggleEvent = false;
+    }
+
+    public PatientData GetCurrentData()
+    {
+        PatientData data = new PatientData();
+        data.nom = inputNom.text;
+        float.TryParse(inputDistanceRoue.text, out data.distanceRoue);
+        float.TryParse(inputDistanceBras.text, out data.distanceBras);
+        float.TryParse(inputMasse.text, out data.masse);
+        return data;
     }
 }

@@ -83,7 +83,7 @@ public class ClientManager : MonoBehaviour
             ClientRowHandler handler = child.GetComponent<ClientRowHandler>();
             if (handler != null)
             {
-                patientList.Add(handler.GetData());
+                patientList.Add(handler.GetCurrentData());
             }
         }
 

@@ -50,9 +50,7 @@ public class UDPSignalSender : MonoBehaviour
     void SendData()
     {
         if (udpClient == null || collisiondetect == null)
-        {
             return;
-        }
 
         double friction = collisiondetect.friction;
         bool collisionFound = collisiondetect.collisionfound;
@@ -70,13 +68,21 @@ public class UDPSignalSender : MonoBehaviour
             previousWheelDistance != wheelDistance || previousForceReset != forceReset)
         {
             udpClient.Send(data, data.Length, ipAddress, port);
+
             previousFriction = friction;
             previousCollisionFound = collisionFound;
             previousHardwareEnable = hardwareEnable;
             previousWholeMass = wholeMass;
             previousWheelDistance = wheelDistance;
             previousForceReset = forceReset;
+
+            Debug.Log($"📤 Données envoyées : Mass={wholeMass}, DistanceRoue={wheelDistance}");
         }
+    }
+
+    public void ForceSend()
+    {
+        SendData(); // 💥 Envoi immédiat déclenché depuis le toggle
     }
 
     void OnApplicationQuit()
