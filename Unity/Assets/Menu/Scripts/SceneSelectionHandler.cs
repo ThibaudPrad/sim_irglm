@@ -68,14 +68,14 @@ public class SceneSelectionHandler : MonoBehaviour
         {
             foreach (Camera cam in root.GetComponentsInChildren<Camera>())
             {
-                cam.targetDisplay = 2;
+                cam.targetDisplay = 1;
                 cam.enabled = true;
                 Debug.Log("🎥 Caméra configurée sur Display 2 : " + cam.name);
             }
 
             foreach (Canvas canvas in root.GetComponentsInChildren<Canvas>())
             {
-                canvas.targetDisplay = 2;
+                canvas.targetDisplay = 1;
                 Debug.Log("🖼️ Canvas redirigé sur Display 2 : " + canvas.name);
             }
         }

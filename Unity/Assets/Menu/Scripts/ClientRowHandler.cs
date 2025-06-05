@@ -15,6 +15,12 @@ public class ClientRowHandler : MonoBehaviour
     void Start()
     {
         toggleClient.onValueChanged.AddListener(OnToggleChanged);
+
+        inputNom.onEndEdit.AddListener(delegate { NotifyChange(); });
+        inputDistanceRoue.onEndEdit.AddListener(delegate { NotifyChange(); });
+        inputDistanceBras.onEndEdit.AddListener(delegate { NotifyChange(); });
+        inputMasse.onEndEdit.AddListener(delegate { NotifyChange(); });
+
     }
 
     void OnToggleChanged(bool isOn)
@@ -58,4 +64,14 @@ public class ClientRowHandler : MonoBehaviour
         float.TryParse(inputMasse.text, out data.masse);
         return data;
     }
+
+    void NotifyChange()
+{
+    ClientManager manager = FindObjectOfType<ClientManager>();
+    if (manager != null)
+    {
+        manager.UpdatePatientListAndSave();
+    }
+}
+
 }
