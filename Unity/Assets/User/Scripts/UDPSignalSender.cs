@@ -33,11 +33,11 @@ public class UDPSignalSender : MonoBehaviour
             udpClient = new UdpClient();
             hardwareEnable = 1;
             forceReset = true;
-            Debug.Log("📡 UDPSignalSender initialisé.");
+            Debug.Log("UDPSignalSender initialisé.");
         }
         catch (SocketException e)
         {
-            Debug.LogError("❌ Erreur d'ouverture du port UDP : " + e.Message);
+            Debug.LogError("Erreur d'ouverture de UDP : " + e.Message);
         }
     }
 
@@ -76,13 +76,13 @@ public class UDPSignalSender : MonoBehaviour
             previousWheelDistance = wheelDistance;
             previousForceReset = forceReset;
 
-            Debug.Log($"📤 Données envoyées : Mass={wholeMass}, DistanceRoue={wheelDistance}");
+            Debug.Log($" Données envoyées : Mass={wholeMass}, DistanceRoue={wheelDistance}");
         }
     }
 
     public void ForceSend()
     {
-        SendData(); // 💥 Envoi immédiat déclenché depuis le toggle
+        SendData();
     }
 
     void OnApplicationQuit()

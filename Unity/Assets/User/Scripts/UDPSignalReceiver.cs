@@ -38,13 +38,13 @@ public class UDPSignalReceiver : MonoBehaviour
           IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
           byte[] receivedBytes = udpClient.EndReceive(ar, ref remoteEndPoint);
 
-        // Convert byte data to Velocity
+        
         currentincrementindex = System.BitConverter.ToDouble(receivedBytes, 0);
         angularVelocity = System.BitConverter.ToDouble(receivedBytes, 8);
         linearVelocity = System.BitConverter.ToDouble(receivedBytes,16);
         emergencyStop= System.BitConverter.ToDouble(receivedBytes,24);
 
-        // Try to avoid jitter
+        
         double thresholdlinear = 0.02;
         double thresholdangular = 0.01;
 
@@ -57,16 +57,10 @@ public class UDPSignalReceiver : MonoBehaviour
         Debug.Log("Emergency Stop " + emergencyStop);
 
 
-        // Debug.Log("Received linear velocity data: " + linearVelocity+"Received angular velocity data: " + angularVelocity);
-
-        
-       
-
-        // Continue listening for the next UDP packet
         udpClient.BeginReceive(new System.AsyncCallback(ReceiveCallback), null);
       
     }
-    // Update is called once per frame
+  
     void Update()
     {
         if (currentincrementindex != lastincrementindex)

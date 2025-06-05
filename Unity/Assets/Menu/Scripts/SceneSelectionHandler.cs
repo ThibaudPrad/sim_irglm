@@ -40,29 +40,28 @@ public class SceneSelectionHandler : MonoBehaviour
 
     public void SetSelectedScene(string sceneName)
     {
-        Debug.Log("🟢 Chargement demandé : " + sceneName);
+        Debug.Log(sceneName);
         StartCoroutine(LoadSceneOnDisplay2(sceneName));
     }
 
     private IEnumerator LoadSceneOnDisplay2(string sceneName)
     {
-        // 🔄 Nettoyage de DontDestroyOnLoad AVANT le chargement de la nouvelle scène
+        
         CleanDontDestroyOnLoad();
 
-        // 🔻 Déchargement éventuel de la scène précédente
+        
         if (!string.IsNullOrEmpty(loadedScene))
         {
             yield return SceneManager.UnloadSceneAsync(loadedScene);
         }
 
-        // 📦 Chargement additif
+      
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
             yield return null;
 
         loadedScene = sceneName;
 
-        // 🎯 Configuration display 2
         Scene scene = SceneManager.GetSceneByName(sceneName);
         foreach (GameObject root in scene.GetRootGameObjects())
         {
@@ -80,20 +79,17 @@ public class SceneSelectionHandler : MonoBehaviour
             }
         }
 
-        // ⏳ Attendre une frame pour injection
         yield return null;
 
-        // 🧠 Injection CollisionDetect dans le sender
         CollisionDetect cd = FindObjectOfType<CollisionDetect>();
         UDPSignalSender sender = FindObjectOfType<UDPSignalSender>();
         if (sender != null && cd != null)
         {
             sender.collisiondetect = cd;
-            Debug.Log("✅ CollisionDetect injecté !");
         }
         else
         {
-            Debug.LogWarning("⚠️ Injection de CollisionDetect échouée");
+            Debug.LogWarning("Injection de CollisionDetect échouée");
         }
     }
 
@@ -105,7 +101,6 @@ public class SceneSelectionHandler : MonoBehaviour
         {
             if (obj.scene.name == "DontDestroyOnLoad" && !namesToKeep.Contains(obj.name))
             {
-                Debug.Log("🧹 Suppression de : " + obj.name);
                 Destroy(obj);
             }
         }

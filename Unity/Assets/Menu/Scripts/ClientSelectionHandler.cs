@@ -11,7 +11,7 @@ public class ClientSelectionHandler : MonoBehaviour
 
     public ClientRowHandler CurrentSelected { get; private set; }
 
-    private UDPSignalSender udpSender; // 👉 glisse ici UserWheelchair dans l’inspecteur
+    private UDPSignalSender udpSender;
 
     private void Awake()
     {

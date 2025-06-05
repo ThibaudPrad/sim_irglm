@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class ClientManager : MonoBehaviour
 {
-    public GameObject clientRowPrefab; // Drag & drop ClientRow prefab
-    public Transform clientListContent; // Drag & drop LeftPanel or content container
+    public GameObject clientRowPrefab;
+    public Transform clientListContent;
 
     private List<PatientData> patientList = new List<PatientData>();
     private int clientCounter;
@@ -21,7 +21,7 @@ public class ClientManager : MonoBehaviour
         }
     }
 
-    // ✅ Ajoute une ligne vide (utilisateur clique sur +)
+    
     public void AddClientRow()
     {
         GameObject newRow = Instantiate(clientRowPrefab, clientListContent);
@@ -29,7 +29,6 @@ public class ClientManager : MonoBehaviour
 
         clientCounter++;
 
-        // 🔒 Ajouter une ligne vide dans la liste pour éviter les erreurs à la sauvegarde
         PatientData data = new PatientData
         {
             nom = "",
@@ -42,7 +41,6 @@ public class ClientManager : MonoBehaviour
         PatientSaveManager.Instance.SavePatients(patientList);
     }
 
-    // ✅ Ajoute une ligne déjà remplie (chargement depuis fichier JSON)
     public void AddClientRow(PatientData data)
     {
         GameObject newRow = Instantiate(clientRowPrefab, clientListContent);

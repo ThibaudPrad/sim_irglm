@@ -23,8 +23,8 @@ public class PatientSaveManager : MonoBehaviour
 
         savePath = Path.Combine(Application.persistentDataPath, "patients.json");
 
-        // 👉 Affiche le chemin de sauvegarde dans la console
-        Debug.Log("📁 Save path: " + savePath);
+        
+        Debug.Log(savePath);
     }
 
     public void SavePatients(List<PatientData> list)
@@ -32,7 +32,7 @@ public class PatientSaveManager : MonoBehaviour
         PatientListData wrapper = new PatientListData { patients = list };
         string json = JsonUtility.ToJson(wrapper, true);
         File.WriteAllText(savePath, json);
-        Debug.Log("✅ Patients sauvegardés !");
+        Debug.Log("Patients sauvegardés");
     }
 
     public List<PatientData> LoadPatients()

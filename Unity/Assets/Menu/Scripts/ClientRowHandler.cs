@@ -29,7 +29,6 @@ public class ClientRowHandler : MonoBehaviour
 
         if (isOn)
         {
-            // Deselect previous
             if (ClientSelectionHandler.Instance.CurrentSelected != null &&
                 ClientSelectionHandler.Instance.CurrentSelected != this)
             {
