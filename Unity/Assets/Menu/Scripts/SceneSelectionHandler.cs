@@ -46,16 +46,16 @@ public class SceneSelectionHandler : MonoBehaviour
 
     private IEnumerator LoadSceneOnDisplay2(string sceneName)
     {
-        
+
         CleanDontDestroyOnLoad();
 
-        
+
         if (!string.IsNullOrEmpty(loadedScene))
         {
             yield return SceneManager.UnloadSceneAsync(loadedScene);
         }
 
-      
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
             yield return null;
@@ -82,6 +82,8 @@ public class SceneSelectionHandler : MonoBehaviour
         yield return null;
 
         CollisionDetect cd = FindObjectOfType<CollisionDetect>();
+
+
         UDPSignalSender sender = FindObjectOfType<UDPSignalSender>();
         if (sender != null && cd != null)
         {
@@ -91,6 +93,24 @@ public class SceneSelectionHandler : MonoBehaviour
         {
             Debug.LogWarning("Injection de CollisionDetect échouée");
         }
+        
+        // Injection de CollisionDetect
+        if (sender != null && cd != null)
+        {
+            sender.collisiondetect = cd;
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Injection de CollisionDetect échouée");
+        }
+
+        // Injection des données du client si déjà sélectionné
+        if (ClientSelectionHandler.Instance != null && ClientSelectionHandler.Instance.HasSelectedClient())
+        {
+            ClientSelectionHandler.Instance.ApplySelectedClientToScene();
+        }
+
+        
     }
 
     private void CleanDontDestroyOnLoad()

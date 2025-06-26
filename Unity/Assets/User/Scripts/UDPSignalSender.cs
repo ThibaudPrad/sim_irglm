@@ -93,6 +93,14 @@ public class UDPSignalSender : MonoBehaviour
         SendData();
     }
 
+    public void ApplyPatientData(PatientData data)
+    {
+        wholeMass = data.masse;
+        wheelDistance = data.distanceRoue;
+        Debug.Log($"👤 Données patient appliquées : masse={wholeMass}, wheelDistance={wheelDistance}");
+    }
+
+
     void OnDestroy()
     {
         if (udpClient != null)

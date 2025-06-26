@@ -11,8 +11,6 @@ public class ClientSelectionHandler : MonoBehaviour
 
     public ClientRowHandler CurrentSelected { get; private set; }
 
-    private UDPSignalSender udpSender;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -29,28 +27,41 @@ public class ClientSelectionHandler : MonoBehaviour
         SelectedMasse = data.masse.ToString();
         CurrentSelected = handler;
 
-        Debug.Log($"Client sélectionné : {data.nom}, Roue: {data.distanceRoue}, Bras: {data.distanceBras}, Masse: {data.masse}");
+        Debug.Log($"✅ Client sélectionné : {data.nom}, Roue: {data.distanceRoue}, Bras: {data.distanceBras}, Masse: {data.masse}");
 
-        if (udpSender == null)
+        ApplyPatientDataToScene(data);
+    }
+
+    private void ApplyPatientDataToScene(PatientData data)
+    {
+        GameObject wheelchair = GameObject.Find("UserWheelchair");
+        if (wheelchair != null)
         {
-            GameObject wheelchair = GameObject.Find("UserWheelchair");
-            if (wheelchair != null)
+            UDPSignalSender sender = wheelchair.GetComponent<UDPSignalSender>();
+            if (sender != null)
             {
-                udpSender = wheelchair.GetComponent<UDPSignalSender>();
-                Debug.Log("🔄 UDPSignalSender récupéré dynamiquement.");
+                sender.wheelDistance = data.distanceRoue;
+                sender.wholeMass = data.masse;
+                sender.ForceSend();
+                Debug.Log("📤 Données du patient envoyées au UserWheelchair.");
             }
             else
             {
-                Debug.LogWarning("⚠️ UserWheelchair non trouvé dans la scène !");
+                Debug.LogWarning("❌ UDPSignalSender non trouvé sur UserWheelchair !");
             }
         }
-
-        if (udpSender != null)
+        else
         {
-            udpSender.wheelDistance = data.distanceRoue;
-            udpSender.wholeMass = data.masse;
-            udpSender.ForceSend();
+            Debug.LogWarning("❌ UserWheelchair non trouvé dans la scène !");
         }
+    }
+
+    public void ApplySelectedClientToScene()
+    {
+        if (!HasSelectedClient()) return;
+
+        PatientData data = GetSelectedClientData();
+        ApplyPatientDataToScene(data);
     }
 
     public void ClearSelection()
@@ -61,6 +72,23 @@ public class ClientSelectionHandler : MonoBehaviour
         SelectedMasse = null;
         CurrentSelected = null;
 
-        Debug.Log("Aucun client sélectionné");
+        Debug.Log("🧼 Aucun client sélectionné");
+    }
+
+    public bool HasSelectedClient()
+    {
+        return !string.IsNullOrEmpty(SelectedNom);
+    }
+
+    public PatientData GetSelectedClientData()
+    {
+        if (!HasSelectedClient()) return null;
+
+        PatientData data = new PatientData();
+        data.nom = SelectedNom;
+        float.TryParse(SelectedRoue, out data.distanceRoue);
+        float.TryParse(SelectedBras, out data.distanceBras);
+        float.TryParse(SelectedMasse, out data.masse);
+        return data;
     }
 }
