@@ -17,26 +17,32 @@ public class SceneSelectionHandler : MonoBehaviour
     };
 
     private void Awake()
+{
+    if (Instance != null && Instance != this)
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        if (Display.displays.Length > 1)
-            Display.displays[1].Activate();
-
-        if (sceneCamera != null)
-        {
-            sceneCamera.targetDisplay = 1;
-            sceneCamera.enabled = false;
-        }
+        Destroy(gameObject);
     }
+    else
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Activation du Display 2 (index 1) si disponible
+    if (Display.displays.Length > 1)
+        Display.displays[1].Activate();
+
+    //  Activation du Display 3 (index 2) si disponible
+    if (Display.displays.Length > 2)
+        Display.displays[2].Activate();
+
+    if (sceneCamera != null)
+    {
+        sceneCamera.targetDisplay = 1;
+        sceneCamera.enabled = false;
+    }
+}
+
 
     public void SetSelectedScene(string sceneName)
     {
