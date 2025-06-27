@@ -6,7 +6,8 @@ using System.Collections.Generic;
 public class SceneSelectionHandler : MonoBehaviour
 {
     public static SceneSelectionHandler Instance { get; private set; }
-    public Camera sceneCamera;
+
+    public Camera sceneCamera; // Caméra principale assignée dans l'inspecteur
     private string loadedScene = null;
 
     private readonly List<string> namesToKeep = new List<string>
@@ -17,32 +18,32 @@ public class SceneSelectionHandler : MonoBehaviour
     };
 
     private void Awake()
-{
-    if (Instance != null && Instance != this)
     {
-        Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        // Activation des Displays 2 et 3
+        if (Display.displays.Length > 1)
+            Display.displays[1].Activate();
+        if (Display.displays.Length > 2)
+            Display.displays[2].Activate();
+
+        if (sceneCamera != null)
+        {
+            sceneCamera.targetDisplay = 1;
+            sceneCamera.enabled = false;
+        }
+
+        // Charger automatiquement First_Scene au démarrage
+        StartCoroutine(LoadSceneOnDisplay2("First_Scene"));
     }
-    else
-    {
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    // Activation du Display 2 (index 1) si disponible
-    if (Display.displays.Length > 1)
-        Display.displays[1].Activate();
-
-    //  Activation du Display 3 (index 2) si disponible
-    if (Display.displays.Length > 2)
-        Display.displays[2].Activate();
-
-    if (sceneCamera != null)
-    {
-        sceneCamera.targetDisplay = 1;
-        sceneCamera.enabled = false;
-    }
-}
-
 
     public void SetSelectedScene(string sceneName)
     {
@@ -52,15 +53,12 @@ public class SceneSelectionHandler : MonoBehaviour
 
     private IEnumerator LoadSceneOnDisplay2(string sceneName)
     {
-
         CleanDontDestroyOnLoad();
-
 
         if (!string.IsNullOrEmpty(loadedScene))
         {
             yield return SceneManager.UnloadSceneAsync(loadedScene);
         }
-
 
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
@@ -71,36 +69,34 @@ public class SceneSelectionHandler : MonoBehaviour
         Scene scene = SceneManager.GetSceneByName(sceneName);
         foreach (GameObject root in scene.GetRootGameObjects())
         {
-            foreach (Camera cam in root.GetComponentsInChildren<Camera>())
+            foreach (Camera cam in root.GetComponentsInChildren<Camera>(true))
             {
-                cam.targetDisplay = 1;
+                if (cam.name.ToLower().Contains("down"))
+                {
+                    cam.targetDisplay = 2; // Display 3
+                    Debug.Log("🎥 Caméra DOWN envoyée sur Display 3 : " + cam.name);
+                }
+                else
+                {
+                    cam.targetDisplay = 1; // Display 2
+                    Debug.Log("🎥 Caméra principale envoyée sur Display 2 : " + cam.name);
+                }
+
                 cam.enabled = true;
-                Debug.Log("🎥 Caméra configurée sur Display 2 : " + cam.name);
             }
 
-            foreach (Canvas canvas in root.GetComponentsInChildren<Canvas>())
+            foreach (Canvas canvas in root.GetComponentsInChildren<Canvas>(true))
             {
-                canvas.targetDisplay = 1;
+                canvas.targetDisplay = 1; // Par défaut Display 2
                 Debug.Log("🖼️ Canvas redirigé sur Display 2 : " + canvas.name);
             }
         }
 
         yield return null;
 
-        CollisionDetect cd = FindObjectOfType<CollisionDetect>();
-
-
-        UDPSignalSender sender = FindObjectOfType<UDPSignalSender>();
-        if (sender != null && cd != null)
-        {
-            sender.collisiondetect = cd;
-        }
-        else
-        {
-            Debug.LogWarning("Injection de CollisionDetect échouée");
-        }
-        
         // Injection de CollisionDetect
+        CollisionDetect cd = FindObjectOfType<CollisionDetect>();
+        UDPSignalSender sender = FindObjectOfType<UDPSignalSender>();
         if (sender != null && cd != null)
         {
             sender.collisiondetect = cd;
@@ -115,8 +111,6 @@ public class SceneSelectionHandler : MonoBehaviour
         {
             ClientSelectionHandler.Instance.ApplySelectedClientToScene();
         }
-
-        
     }
 
     private void CleanDontDestroyOnLoad()
