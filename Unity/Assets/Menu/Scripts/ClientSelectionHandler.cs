@@ -27,7 +27,7 @@ public class ClientSelectionHandler : MonoBehaviour
         SelectedMasse = data.masse.ToString();
         CurrentSelected = handler;
 
-        Debug.Log($"✅ Client sélectionné : {data.nom}, Roue: {data.distanceRoue}, Bras: {data.distanceBras}, Masse: {data.masse}");
+        Debug.Log($" Client sélectionné : {data.nom}, Roue: {data.distanceRoue}, Bras: {data.distanceBras}, Masse: {data.masse}");
 
         ApplyPatientDataToScene(data);
     }
@@ -47,12 +47,12 @@ public class ClientSelectionHandler : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("❌ UDPSignalSender non trouvé sur UserWheelchair !");
+                Debug.LogWarning(" UDPSignalSender non trouvé sur UserWheelchair !");
             }
         }
         else
         {
-            Debug.LogWarning("❌ UserWheelchair non trouvé dans la scène !");
+            Debug.LogWarning(" UserWheelchair non trouvé dans la scène !");
         }
     }
 
@@ -72,7 +72,7 @@ public class ClientSelectionHandler : MonoBehaviour
         SelectedMasse = null;
         CurrentSelected = null;
 
-        Debug.Log("🧼 Aucun client sélectionné");
+        Debug.Log(" Aucun client sélectionné");
     }
 
     public bool HasSelectedClient()

@@ -74,12 +74,12 @@ public class SceneSelectionHandler : MonoBehaviour
                 if (cam.name.ToLower().Contains("down"))
                 {
                     cam.targetDisplay = 2; // Display 3
-                    Debug.Log("🎥 Caméra DOWN envoyée sur Display 3 : " + cam.name);
+                    Debug.Log(" Caméra DOWN envoyée sur Display 3 : " + cam.name);
                 }
                 else
                 {
                     cam.targetDisplay = 1; // Display 2
-                    Debug.Log("🎥 Caméra principale envoyée sur Display 2 : " + cam.name);
+                    Debug.Log(" Caméra principale envoyée sur Display 2 : " + cam.name);
                 }
 
                 cam.enabled = true;
@@ -88,7 +88,7 @@ public class SceneSelectionHandler : MonoBehaviour
             foreach (Canvas canvas in root.GetComponentsInChildren<Canvas>(true))
             {
                 canvas.targetDisplay = 1; // Par défaut Display 2
-                Debug.Log("🖼️ Canvas redirigé sur Display 2 : " + canvas.name);
+                Debug.Log(" Canvas redirigé sur Display 2 : " + canvas.name);
             }
         }
 
@@ -103,7 +103,7 @@ public class SceneSelectionHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("⚠️ Injection de CollisionDetect échouée");
+            Debug.LogWarning(" Injection de CollisionDetect échouée");
         }
 
         // Injection des données du client si déjà sélectionné
